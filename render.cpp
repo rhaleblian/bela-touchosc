@@ -13,14 +13,16 @@ OscSender oscSender;
 int localPort = 8000;
 int remotePort = 9000;
 const char* remoteIp = "192.168.1.168";
+// bool handshakeReceived;
+
 float fader1 = 0.5;
 float fader2 = 0.0;
 
-bool handshakeReceived;
 void on_receive(oscpkt::Message* msg, const char *what, void* arg)
 {
 	printf("%s %s\n", msg->addressPattern().c_str(), what);
-	msg->match("/pager1/1/fader1").popFloat(fader2);
+	msg->match("/pager1/1/fader1").popFloat(fader1);
+	msg->match("/pager1/1/fader2").popFloat(fader2);
 	printf("faders = %f, %f\n", fader1, fader2);
 }
 
