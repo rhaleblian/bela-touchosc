@@ -1,7 +1,3 @@
-/**
-OSC example adapted to test Hexler TouchOSC.
-**/
-
 #include <Bela.h>
 #include <libraries/OscSender/OscSender.h>
 #include <libraries/OscReceiver/OscReceiver.h>
@@ -11,7 +7,7 @@ OscSender oscSender;
 
 // TODO support avahi/zeroconf/bonjour _osc.tcp.local
 struct {
-	const char* address = "0.0.0.0";
+	const char* address = "0.0.0.0";  // Actually, this is hardwired.
 	int port = 58000;
 } receiver;
 struct {
@@ -63,3 +59,9 @@ void cleanup(BelaContext *context, void *userData)
 {
 	printf("Shutting down.\n");
 }
+
+/**
+OSC example adapted to test Hexler TouchOSC (Mk2).
+Only a receiver so far.  See the code for ports and layouts and addresses.
+**/
+
