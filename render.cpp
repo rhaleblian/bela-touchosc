@@ -9,30 +9,35 @@ OSC example adapted to test Hexler TouchOSC.
 OscReceiver oscReceiver;
 OscSender oscSender;
 
-// TODO support zeroconf/bonjour
-int localPort = 8000;
-int remotePort = 9000;
-const char* remoteIp = "192.168.1.168";
-// bool handshakeReceived;
+// TODO support avahi/zeroconf/bonjour _osc.tcp.local
+int receivePort = 58000;
+const char* sendAddress = "192.168.1.168";
+int sendPort = 9000;
 
+const char* fader1_key = "/pager1/1/fader1";
+const char* fader2_key = "/pager1/1/fader2";
 float fader1 = 0.5;
 float fader2 = 0.0;
 
-void on_receive(oscpkt::Message* msg, const char *what, void* arg)
+void on_receive(oscpkt::Message* msg, const char *sender, void* arg)
 {
-	printf("%s %s\n", msg->addressPattern().c_str(), what);
-	msg->match("/pager1/1/fader1").popFloat(fader1);
-	msg->match("/pager1/1/fader2").popFloat(fader2);
+	printf("%s %s\n", sender, msg->addressPattern().c_str());
+	msg->match(fader1_key).popFloat(fader1);
+	msg->match(fader2_key).popFloat(fader2);
 	printf("faders = %f, %f\n", fader1, fader2);
 }
 
 bool setup(BelaContext *context, void *userData)
 {
-	oscReceiver.setup(localPort, on_receive);
-	oscSender.setup(remotePort, remoteIp);
+	printf("Starting up.\n");
+	
+	oscReceiver.setup(receivePort, on_receive);
+	oscSender.setup(sendPort, sendAddress);
 
-	printf("OSC initialized. Remote port is is %s:%d .\n", remoteIp, remotePort);
-	printf("Use layout 'Simple MK2'.\n");
+	printf("Receiving on port %d .\n", receivePort);
+	printf("Sending to port %s:%d .\n", sendAddress, sendPort);
+	printf("OSC initialized.\n");
+	printf("Sender should be TouchOSC Mk2 using layout 'Simple MK2'.\n");
 	
 	// oscSender.newMessage("/3/fader1").add(0.25f).send();
 	return true;
@@ -51,5 +56,5 @@ void render(BelaContext *context, void *userData)
 
 void cleanup(BelaContext *context, void *userData)
 {
-
+	printf("Shutting down.\n");
 }
