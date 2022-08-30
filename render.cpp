@@ -1,13 +1,16 @@
 #include <Bela.h>
 #include <libraries/OscSender/OscSender.h>
 #include <libraries/OscReceiver/OscReceiver.h>
+#include <MiscUtilities.h>
+#include <iostream>
+#include <stdlib.h>
 
 OscReceiver oscReceiver;
 OscSender oscSender;
 
-// TODO support avahi/zeroconf/bonjour _osc.tcp.local
+// TODO look at supporting avahi/zeroconf/bonjour _osc.tcp.local
 struct {
-	const char* address = "0.0.0.0";  // Actually, this is hardwired.
+	const char* address = "0.0.0.0";  // Actually, this is implied/implicit.
 	int port = 58000;
 } receiver;
 struct {
@@ -29,18 +32,38 @@ void on_receive(oscpkt::Message* msg, const char *endpoint, void* arg)
 	}
 }
 
+bool isPepper(void) {
+	auto var = getenv("HOME");
+	if (var)
+		std::cout << "HOME=" << var << std::endl;
+	var = getenv("PATH");
+	if (var)
+		std::cout << "PATH=" << var << std::endl;
+		
+	auto pepper = getenv("PEPPER");
+	if (pepper) {
+		std::cout << "I'm a PEPPER, you're a PEPPER, everyone wants to be a PEPPER too" << std::endl;
+		return true;
+	} else {
+		std::cout << "I'm not a PEPPER, you should consider it." << std::endl;
+		return false;
+	}
+}
+
 bool setup(BelaContext *context, void *userData)
 {
-	printf("Starting up.\n");
+	std::cout << "Starting up." << std::endl;
+
+	isPepper();
 	
 	oscReceiver.setup(receiver.port, on_receive);
 	oscSender.setup(sender.port, sender.address);
 
-	printf("Receiving on port %s:%d .\n", receiver.address, receiver.port);
-	printf("Sending to port %s:%d .\n", sender.address, sender.port);
-	printf("Sender should be TouchOSC Mk2 using layout 'Simple MK2'.\n");
-	printf("Reading %s only.\n", address[0]);
-	printf("OSC initialized.\n");
+	std::cout << "Receiving on port" << receiver.address << ":" << receiver.port << " ." << std::endl;
+	std::cout << "Sending to port" << sender.address << ":" << sender.port << " ." << std::endl;
+	std::cout << "Sender should be TouchOSC Mk2 using layout 'Simple MK2'." << std::endl;
+	std::cout << "Reading " << address[0] << " only." << std::endl;
+	std::cout << "OSC initialized." << std::endl;
 
 	return true;
 }
