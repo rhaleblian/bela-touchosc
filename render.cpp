@@ -1,3 +1,10 @@
+/**
+OSC example adapted to test Hexler TouchOSC (Mk2).
+Only a receiver so far.  See the code for ports and layouts and addresses.
+
+2020-2021 yoyodyne research
+**/
+
 #include <Bela.h>
 #include <libraries/OscSender/OscSender.h>
 #include <libraries/OscReceiver/OscReceiver.h>
@@ -82,9 +89,3 @@ void cleanup(BelaContext *context, void *userData)
 {
 	printf("Shutting down.\n");
 }
-
-/**
-OSC example adapted to test Hexler TouchOSC (Mk2).
-Only a receiver so far.  See the code for ports and layouts and addresses.
-**/
-
